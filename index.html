@@ -1457,17 +1457,18 @@
       }
       .gallery-stage {
         width: 100%;
-        height: 420px;
+        height: 500px;
         position: relative;
-        perspective: 1200px;
+        perspective: 1000px;
         cursor: grab;
+        overflow: hidden;
       }
       .gallery-stage:active {
         cursor: grabbing;
       }
       .gallery-ring-container {
-        width: 280px;
-        height: 380px;
+        width: 260px;
+        height: 360px;
         position: absolute;
         left: 50%;
         top: 50%;
@@ -2708,11 +2709,12 @@
     ═══════════════════════════════════════════════════════════ */
       @media (max-width: 1024px) {
         .gallery-stage {
-          height: 320px;
+          height: 420px;
+          overflow: hidden;
         }
         .gallery-ring-container {
-          width: 200px;
-          height: 280px;
+          width: 220px;
+          height: 300px;
         }
         .blog-grid {
           grid-template-columns: 1fr 1fr;
@@ -2813,6 +2815,20 @@
         .contact-info {
           padding-right: 0;
         }
+        /* Gallery: tighter on mobile so ring is visible */
+        .gallery-stage {
+          height: 360px;
+          overflow: hidden;
+        }
+        .gallery-ring-container {
+          width: 180px;
+          height: 250px;
+        }
+        /* Contact: stack vertically on mobile */
+        .contact-grid {
+          grid-template-columns: 1fr;
+          gap: var(--space-10);
+        }
         .form-row {
           grid-template-columns: 1fr;
         }
@@ -2867,6 +2883,14 @@
         .gallery-strip {
           grid-template-columns: repeat(2, 1fr);
           height: 280px;
+        }
+        .gallery-stage {
+          height: 320px;
+          overflow: hidden;
+        }
+        .gallery-ring-container {
+          width: 150px;
+          height: 210px;
         }
         .music-stats {
           grid-template-columns: repeat(2, 1fr);
@@ -5247,30 +5271,47 @@
         const ring = document.getElementById("galleryRing");
         if (!ring) return;
 
+        const container = document.getElementById("galleryRing").parentElement;
         const cards = ring.querySelectorAll(".gallery-img-card");
         const n = cards.length;
-        const radius = 550;
+
+        // Compute radius so cards sit just outside the container width
+        // r = (cardWidth / 2) / tan(π / n) — standard polygon circumradius
+        // We use container width as a proxy for card width
+        function getRadius() {
+          const containerW = container.offsetWidth || 260;
+          // circumradius for a regular polygon: r = w / (2 * sin(π/n))
+          // but we want the ring to be visible within the stage, so cap it
+          const ideal = (containerW / 2) / Math.sin(Math.PI / n);
+          return Math.min(ideal, containerW * 1.1);
+        }
+
+        let radius = getRadius();
         let rotY = 180;
 
-        // Place cards in 3D ring
-        cards.forEach((card, i) => {
-          const angle = i * (360 / n);
-          card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-        });
+        function placeCards() {
+          radius = getRadius();
+          cards.forEach((card, i) => {
+            const angle = i * (360 / n);
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+          });
+        }
 
+        placeCards();
         ring.style.transform = `rotateY(${rotY}deg)`;
 
+        // Recompute on resize
+        window.addEventListener("resize", placeCards, { passive: true });
+
         // Drag
-        let startX = 0,
-          isDragging = false,
-          lastX = 0;
+        let isDragging = false;
+        let lastX = 0;
 
         const stage = document.getElementById("galleryStage");
 
         const onDown = (e) => {
           isDragging = true;
-          startX = e.touches ? e.touches[0].clientX : e.clientX;
-          lastX = startX;
+          lastX = e.touches ? e.touches[0].clientX : e.clientX;
           ring.style.transition = "none";
         };
         const onMove = (e) => {
@@ -5285,7 +5326,7 @@
         };
 
         // Auto rotate — slow, atmospheric
-        let autoRot = setInterval(() => {
+        setInterval(() => {
           if (!isDragging) {
             rotY += 0.2;
             ring.style.transform = `rotateY(${rotY}deg)`;
