@@ -2043,8 +2043,15 @@
         margin-bottom: var(--space-12);
         padding: 0 var(--space-8);
       }
-      .testimonials-carousel-wrap {
+      /* Stage: flex row — prev btn | carousel | next btn */
+      .testimonials-stage {
+        display: flex;
+        align-items: center;
+        gap: 0;
         position: relative;
+      }
+      .testimonials-carousel-wrap {
+        flex: 1;
         overflow: hidden;
         cursor: grab;
         touch-action: pan-y;
@@ -2055,7 +2062,7 @@
       .testimonials-carousel {
         display: flex;
         gap: var(--space-6);
-        padding: var(--space-4) var(--space-12) var(--space-8);
+        padding: var(--space-4) var(--space-6) var(--space-8);
         user-select: none;
         transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
@@ -2138,35 +2145,46 @@
         color: var(--color-text-muted);
         letter-spacing: 0.06em;
       }
-      /* Carousel controls */
-      .testimonials-controls {
-        display: flex;
-        justify-content: center;
-        gap: var(--space-4);
-        margin-top: var(--space-6);
-        padding: 0 var(--space-8);
-        align-items: center;
-      }
+      /* Side nav buttons */
       .testimonials-btn {
-        width: 44px;
-        height: 44px;
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
         border: 1px solid var(--color-divider);
         background: var(--color-surface);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all var(--duration-fast);
+        transition: background var(--duration-fast),
+          border-color var(--duration-fast), color var(--duration-fast),
+          transform var(--duration-fast);
         color: var(--color-charcoal);
+        z-index: 2;
+      }
+      .testimonials-btn--prev {
+        margin-right: var(--space-4);
+      }
+      .testimonials-btn--next {
+        margin-left: var(--space-4);
       }
       .testimonials-btn:hover {
         border-color: var(--color-forest);
         background: var(--color-forest);
         color: var(--color-ivory);
+        transform: scale(1.05);
+      }
+      /* Dots row — centered below */
+      .testimonials-controls {
+        display: flex;
+        justify-content: center;
+        margin-top: var(--space-6);
+        padding: 0 var(--space-8);
       }
       .testimonials-pips {
         display: flex;
         gap: var(--space-2);
+        align-items: center;
       }
       .testimonials-pip {
         width: 6px;
@@ -2622,6 +2640,118 @@
         .menu-photo-strip {
           display: none;
         }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+       FAQ — ACCORDION
+    ═══════════════════════════════════════════════════════════ */
+      .faq-section {
+        background: var(--color-ivory);
+        padding: var(--space-24) var(--space-8);
+        border-top: 1px solid var(--color-divider);
+      }
+      .faq-inner {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .faq-header {
+        text-align: center;
+        margin-bottom: var(--space-12);
+      }
+      .faq-list {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid var(--color-divider);
+      }
+      .faq-item {
+        border-bottom: 1px solid var(--color-divider);
+        transition: padding-left var(--duration-med) var(--ease-out-expo);
+      }
+      /* Trigger button */
+      .faq-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-6);
+        padding: var(--space-6) 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+      }
+      .faq-q {
+        font-family: var(--font-display);
+        font-size: var(--text-xl);
+        font-weight: 400;
+        color: var(--color-charcoal);
+        line-height: 1.35;
+        transition: color var(--duration-fast);
+      }
+      .faq-trigger:hover .faq-q,
+      .faq-trigger[aria-expanded="true"] .faq-q {
+        color: var(--color-forest);
+      }
+      /* Chevron icon container */
+      .faq-icon {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--color-divider);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-text-muted);
+        transition: transform var(--duration-med) var(--ease-out-expo),
+          background var(--duration-fast), border-color var(--duration-fast),
+          color var(--duration-fast);
+      }
+      .faq-trigger[aria-expanded="true"] .faq-icon {
+        transform: rotate(180deg);
+        background: var(--color-forest);
+        border-color: var(--color-forest);
+        color: var(--color-ivory);
+      }
+      /* Answer body — animates via max-height */
+      .faq-body {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.45s var(--ease-out-expo);
+      }
+      .faq-body[hidden] {
+        display: block; /* override browser hidden so transition works */
+        visibility: hidden;
+      }
+      .faq-body.is-open {
+        visibility: visible;
+      }
+      .faq-body p {
+        font-family: var(--font-body);
+        font-size: var(--text-base);
+        font-weight: 300;
+        color: var(--color-text-muted);
+        line-height: 1.8;
+        padding-bottom: var(--space-6);
+        padding-right: var(--space-10);
+      }
+      /* Gold left-bar on open item */
+      .faq-item.is-open {
+        position: relative;
+        padding-left: var(--space-6);
+      }
+      .faq-item.is-open::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--color-gold);
+      }
+      /* Active question text stays green */
+      .faq-item.is-open .faq-q {
+        color: var(--color-forest);
       }
 
       /* ═══════════════════════════════════════════════════════════
@@ -3191,6 +3321,11 @@
         .testimonials-carousel .testimonial-card {
           width: calc(100vw - var(--space-12) * 2);
         }
+        /* On mobile, hide prev/next buttons — swipe is sufficient */
+        .testimonials-btn--prev,
+        .testimonials-btn--next {
+          display: none;
+        }
         .contact-info {
           padding-right: 0;
         }
@@ -3235,9 +3370,12 @@
           height: 44px;
           background: none;
         }
-        /* FAQ grid: stack to 1 column on mobile */
-        #faq [style*="grid-template-columns: 1fr 1fr"] {
-          grid-template-columns: 1fr !important;
+        /* FAQ accordion: full width on mobile, smaller text */
+        .faq-q {
+          font-size: var(--text-lg);
+        }
+        .faq-body p {
+          padding-right: 0;
         }
       }
 
@@ -4779,227 +4917,11 @@
             style="margin: var(--space-6) auto"
           ></div>
         </div>
-        <div class="testimonials-carousel-wrap" id="testimonialsWrap">
-          <div class="testimonials-carousel" id="testimonialsCarousel">
-            <article
-              class="testimonial-card"
-              itemscope
-              itemtype="https://schema.org/Review"
-              itemprop="review"
-            >
-              <div class="testimonial-mark" aria-hidden="true">"</div>
-              <div
-                class="testimonial-stars"
-                aria-label="5 out of 5 stars"
-                itemprop="reviewRating"
-                itemscope
-                itemtype="https://schema.org/Rating"
-              >
-                <meta itemprop="ratingValue" content="5" /><meta
-                  itemprop="bestRating"
-                  content="5"
-                />
-                ★★★★★
-              </div>
-              <blockquote class="testimonial-quote" itemprop="reviewBody">
-                "The food ran until the last guest left — and my cousins from
-                Belgium still talk about the brochettes. The band read the room
-                perfectly. We didn't have to worry about a single thing."
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar" aria-hidden="true">C</div>
-                <div>
-                  <p
-                    class="testimonial-name"
-                    itemprop="author"
-                    itemscope
-                    itemtype="https://schema.org/Person"
-                  >
-                    <span itemprop="name">
-                      Clarisse &amp; Patrick Nshimiyimana
-                    </span>
-                  </p>
-                  <p class="testimonial-event">
-                    Wedding Reception · Intare Arena, November 2025
-                  </p>
-                </div>
-              </div>
-            </article>
-            <article
-              class="testimonial-card"
-              itemscope
-              itemtype="https://schema.org/Review"
-              itemprop="review"
-            >
-              <div class="testimonial-mark" aria-hidden="true">"</div>
-              <div
-                class="testimonial-stars"
-                aria-label="5 out of 5 stars"
-                itemprop="reviewRating"
-                itemscope
-                itemtype="https://schema.org/Rating"
-              >
-                <meta itemprop="ratingValue" content="5" /><meta
-                  itemprop="bestRating"
-                  content="5"
-                />
-                ★★★★★
-              </div>
-              <blockquote class="testimonial-quote" itemprop="reviewBody">
-                "I am a wedding planner. I have worked with every caterer in
-                Kigali. UMUTSAKURA is the only one I recommend without
-                hesitation. My clients thank me for it every time."
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar" aria-hidden="true">G</div>
-                <div>
-                  <p
-                    class="testimonial-name"
-                    itemprop="author"
-                    itemscope
-                    itemtype="https://schema.org/Person"
-                  >
-                    <span itemprop="name">Grace Uwimana</span>
-                  </p>
-                  <p class="testimonial-event">
-                    Senior Wedding Planner · Kigali
-                  </p>
-                </div>
-              </div>
-            </article>
-            <article
-              class="testimonial-card"
-              itemscope
-              itemtype="https://schema.org/Review"
-              itemprop="review"
-            >
-              <div class="testimonial-mark" aria-hidden="true">"</div>
-              <div
-                class="testimonial-stars"
-                aria-label="5 out of 5 stars"
-                itemprop="reviewRating"
-                itemscope
-                itemtype="https://schema.org/Rating"
-              >
-                <meta itemprop="ratingValue" content="5" /><meta
-                  itemprop="bestRating"
-                  content="5"
-                />
-                ★★★★★
-              </div>
-              <blockquote class="testimonial-quote" itemprop="reviewBody">
-                "I planned our wedding from Brussels. UMUTSAKURA responded to
-                every WhatsApp within hours. On the day, everything was exactly
-                as promised. Our guests from Europe were genuinely impressed."
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar" aria-hidden="true">D</div>
-                <div>
-                  <p
-                    class="testimonial-name"
-                    itemprop="author"
-                    itemscope
-                    itemtype="https://schema.org/Person"
-                  >
-                    <span itemprop="name">Diane Mutesi</span>
-                  </p>
-                  <p class="testimonial-event">
-                    Gusaba &amp; Reception · Nyarutarama, September 2025
-                  </p>
-                </div>
-              </div>
-            </article>
-            <article
-              class="testimonial-card"
-              itemscope
-              itemtype="https://schema.org/Review"
-              itemprop="review"
-            >
-              <div class="testimonial-mark" aria-hidden="true">"</div>
-              <div
-                class="testimonial-stars"
-                aria-label="5 out of 5 stars"
-                itemprop="reviewRating"
-                itemscope
-                itemtype="https://schema.org/Rating"
-              >
-                <meta itemprop="ratingValue" content="5" /><meta
-                  itemprop="bestRating"
-                  content="5"
-                />
-                ★★★★★
-              </div>
-              <blockquote class="testimonial-quote" itemprop="reviewBody">
-                "Our corporate gala had 350 guests and not a single complaint
-                about the food or the music. UMUTSAKURA delivered military
-                precision without losing any warmth or elegance."
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar" aria-hidden="true">J</div>
-                <div>
-                  <p
-                    class="testimonial-name"
-                    itemprop="author"
-                    itemscope
-                    itemtype="https://schema.org/Person"
-                  >
-                    <span itemprop="name">Jean-Pierre Habimana</span>
-                  </p>
-                  <p class="testimonial-event">
-                    Corporate Gala · Kigali Convention Centre, 2025
-                  </p>
-                </div>
-              </div>
-            </article>
-            <article
-              class="testimonial-card"
-              itemscope
-              itemtype="https://schema.org/Review"
-              itemprop="review"
-            >
-              <div class="testimonial-mark" aria-hidden="true">"</div>
-              <div
-                class="testimonial-stars"
-                aria-label="5 out of 5 stars"
-                itemprop="reviewRating"
-                itemscope
-                itemtype="https://schema.org/Rating"
-              >
-                <meta itemprop="ratingValue" content="5" /><meta
-                  itemprop="bestRating"
-                  content="5"
-                />
-                ★★★★★
-              </div>
-              <blockquote class="testimonial-quote" itemprop="reviewBody">
-                "The Gusaba was so beautifully handled — the music transitioned
-                perfectly between traditional Rwandan songs and modern ones.
-                Every elder in the room was moved. Truly exceptional."
-              </blockquote>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar" aria-hidden="true">A</div>
-                <div>
-                  <p
-                    class="testimonial-name"
-                    itemprop="author"
-                    itemscope
-                    itemtype="https://schema.org/Person"
-                  >
-                    <span itemprop="name">Amina &amp; David Karangwa</span>
-                  </p>
-                  <p class="testimonial-event">
-                    Gusaba Ceremony · Rebero, October 2025
-                  </p>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-        <div class="testimonials-controls">
+        <div class="testimonials-stage">
           <button
-            class="testimonials-btn"
+            class="testimonials-btn testimonials-btn--prev"
             id="testimonialPrev"
-            aria-label="Previous"
+            aria-label="Previous testimonial"
           >
             <svg
               width="16"
@@ -5012,11 +4934,230 @@
               <path d="M19 12H5M5 12l7-7M5 12l7 7" />
             </svg>
           </button>
-          <div class="testimonials-pips" id="testimonialPips"></div>
+
+          <div class="testimonials-carousel-wrap" id="testimonialsWrap">
+            <div class="testimonials-carousel" id="testimonialsCarousel">
+              <article
+                class="testimonial-card"
+                itemscope
+                itemtype="https://schema.org/Review"
+                itemprop="review"
+              >
+                <div class="testimonial-mark" aria-hidden="true">"</div>
+                <div
+                  class="testimonial-stars"
+                  aria-label="5 out of 5 stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" /><meta
+                    itemprop="bestRating"
+                    content="5"
+                  />
+                  ★★★★★
+                </div>
+                <blockquote class="testimonial-quote" itemprop="reviewBody">
+                  "The food ran until the last guest left — and my cousins from
+                  Belgium still talk about the brochettes. The band read the
+                  room perfectly. We didn't have to worry about a single thing."
+                </blockquote>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar" aria-hidden="true">C</div>
+                  <div>
+                    <p
+                      class="testimonial-name"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">
+                        Clarisse &amp; Patrick Nshimiyimana
+                      </span>
+                    </p>
+                    <p class="testimonial-event">
+                      Wedding Reception · Intare Arena, November 2025
+                    </p>
+                  </div>
+                </div>
+              </article>
+              <article
+                class="testimonial-card"
+                itemscope
+                itemtype="https://schema.org/Review"
+                itemprop="review"
+              >
+                <div class="testimonial-mark" aria-hidden="true">"</div>
+                <div
+                  class="testimonial-stars"
+                  aria-label="5 out of 5 stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" /><meta
+                    itemprop="bestRating"
+                    content="5"
+                  />
+                  ★★★★★
+                </div>
+                <blockquote class="testimonial-quote" itemprop="reviewBody">
+                  "I am a wedding planner. I have worked with every caterer in
+                  Kigali. UMUTSAKURA is the only one I recommend without
+                  hesitation. My clients thank me for it every time."
+                </blockquote>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar" aria-hidden="true">G</div>
+                  <div>
+                    <p
+                      class="testimonial-name"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Grace Uwimana</span>
+                    </p>
+                    <p class="testimonial-event">
+                      Senior Wedding Planner · Kigali
+                    </p>
+                  </div>
+                </div>
+              </article>
+              <article
+                class="testimonial-card"
+                itemscope
+                itemtype="https://schema.org/Review"
+                itemprop="review"
+              >
+                <div class="testimonial-mark" aria-hidden="true">"</div>
+                <div
+                  class="testimonial-stars"
+                  aria-label="5 out of 5 stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" /><meta
+                    itemprop="bestRating"
+                    content="5"
+                  />
+                  ★★★★★
+                </div>
+                <blockquote class="testimonial-quote" itemprop="reviewBody">
+                  "I planned our wedding from Brussels. UMUTSAKURA responded to
+                  every WhatsApp within hours. On the day, everything was
+                  exactly as promised. Our guests from Europe were genuinely
+                  impressed."
+                </blockquote>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar" aria-hidden="true">D</div>
+                  <div>
+                    <p
+                      class="testimonial-name"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Diane Mutesi</span>
+                    </p>
+                    <p class="testimonial-event">
+                      Gusaba &amp; Reception · Nyarutarama, September 2025
+                    </p>
+                  </div>
+                </div>
+              </article>
+              <article
+                class="testimonial-card"
+                itemscope
+                itemtype="https://schema.org/Review"
+                itemprop="review"
+              >
+                <div class="testimonial-mark" aria-hidden="true">"</div>
+                <div
+                  class="testimonial-stars"
+                  aria-label="5 out of 5 stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" /><meta
+                    itemprop="bestRating"
+                    content="5"
+                  />
+                  ★★★★★
+                </div>
+                <blockquote class="testimonial-quote" itemprop="reviewBody">
+                  "Our corporate gala had 350 guests and not a single complaint
+                  about the food or the music. UMUTSAKURA delivered military
+                  precision without losing any warmth or elegance."
+                </blockquote>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar" aria-hidden="true">J</div>
+                  <div>
+                    <p
+                      class="testimonial-name"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Jean-Pierre Habimana</span>
+                    </p>
+                    <p class="testimonial-event">
+                      Corporate Gala · Kigali Convention Centre, 2025
+                    </p>
+                  </div>
+                </div>
+              </article>
+              <article
+                class="testimonial-card"
+                itemscope
+                itemtype="https://schema.org/Review"
+                itemprop="review"
+              >
+                <div class="testimonial-mark" aria-hidden="true">"</div>
+                <div
+                  class="testimonial-stars"
+                  aria-label="5 out of 5 stars"
+                  itemprop="reviewRating"
+                  itemscope
+                  itemtype="https://schema.org/Rating"
+                >
+                  <meta itemprop="ratingValue" content="5" /><meta
+                    itemprop="bestRating"
+                    content="5"
+                  />
+                  ★★★★★
+                </div>
+                <blockquote class="testimonial-quote" itemprop="reviewBody">
+                  "The Gusaba was so beautifully handled — the music
+                  transitioned perfectly between traditional Rwandan songs and
+                  modern ones. Every elder in the room was moved. Truly
+                  exceptional."
+                </blockquote>
+                <div class="testimonial-author">
+                  <div class="testimonial-avatar" aria-hidden="true">A</div>
+                  <div>
+                    <p
+                      class="testimonial-name"
+                      itemprop="author"
+                      itemscope
+                      itemtype="https://schema.org/Person"
+                    >
+                      <span itemprop="name">Amina &amp; David Karangwa</span>
+                    </p>
+                    <p class="testimonial-event">
+                      Gusaba Ceremony · Rebero, October 2025
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
           <button
-            class="testimonials-btn"
+            class="testimonials-btn testimonials-btn--next"
             id="testimonialNext"
-            aria-label="Next"
+            aria-label="Next testimonial"
           >
             <svg
               width="16"
@@ -5029,6 +5170,11 @@
               <path d="M5 12h14M19 12l-7-7M19 12l-7 7" />
             </svg>
           </button>
+        </div>
+
+        <!-- Dots below -->
+        <div class="testimonials-controls">
+          <div class="testimonials-pips" id="testimonialPips"></div>
         </div>
       </section>
 
@@ -5335,295 +5481,311 @@
         </p>
       </section>
 
-      <!-- ═══════ FAQ — Hidden visually, indexed by Google ═══════ -->
+      <!-- ═══════ FAQ — Accordion, indexed by Google ═══════ -->
       <!-- FAQPage schema in <head> mirrors these Q&As for rich result eligibility -->
       <section
         id="faq"
         aria-label="Frequently asked questions — wedding catering Kigali"
         itemscope
         itemtype="https://schema.org/FAQPage"
-        style="
-          background: var(--color-ivory);
-          padding: var(--space-16) var(--space-8);
-          border-top: 1px solid var(--color-divider);
-        "
+        class="faq-section"
       >
-        <div style="max-width: var(--container); margin: 0 auto">
-          <p class="section-label" style="justify-content: center">FAQ</p>
-          <h2
-            class="section-title"
-            style="text-align: center; margin-bottom: var(--space-12)"
-          >
-            Common questions about<br /><em>our catering &amp; music</em>
-          </h2>
-          <div
-            style="
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: var(--space-8);
-              max-width: 960px;
-              margin: 0 auto;
-            "
-          >
+        <div class="faq-inner">
+          <!-- Header -->
+          <div class="faq-header">
+            <p class="section-label reveal" style="justify-content: center">
+              FAQ
+            </p>
+            <h2
+              class="section-title reveal reveal-delay-1"
+              style="text-align: center"
+            >
+              Common questions about<br /><em>our catering &amp; music</em>
+            </h2>
+            <div
+              class="gold-line reveal reveal-delay-2"
+              style="margin: var(--space-6) auto"
+            ></div>
+          </div>
+
+          <!-- Accordion list -->
+          <div class="faq-list reveal reveal-delay-2" role="list">
             <!-- Q1 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                How much does wedding catering cost in Kigali?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >How much does wedding catering cost in Kigali?</span
                 >
-                  UMUTSAKURA offers three buffet packages: the Classic Menu at
-                  <strong>8,000 RWF per plate</strong>, the Premium Menu at
-                  <strong>10,000 RWF per plate</strong>, and the Golden Menu at
-                  <strong>15,000 RWF per plate</strong>. All packages include
-                  both catering and live music — designed as one unified
-                  experience.
-                </p>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    UMUTSAKURA offers three buffet packages: the Classic Menu at
+                    <strong>8,000 RWF per plate</strong>, the Premium Menu at
+                    <strong>10,000 RWF per plate</strong>, and the Golden Menu
+                    at <strong>15,000 RWF per plate</strong>. All packages
+                    include both catering and live music — designed as one
+                    unified experience.
+                  </p>
+                </div>
               </div>
             </div>
+
             <!-- Q2 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                Do you cater for Gusaba ceremonies in Kigali?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >Do you cater for Gusaba ceremonies in Kigali?</span
                 >
-                  Yes. UMUTSAKURA specializes in Gusaba ceremonies, wedding
-                  receptions, and all traditional Rwandan celebrations across
-                  Kigali. Our Classic Bundle is ideal for Gusaba ceremonies of
-                  up to 200 guests. We handle traditional music transitions —
-                  from Rwandan songs to contemporary — with care and cultural
-                  knowledge.
-                </p>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    Yes. UMUTSAKURA specializes in Gusaba ceremonies, wedding
+                    receptions, and all traditional Rwandan celebrations across
+                    Kigali. Our Classic Bundle is ideal for Gusaba ceremonies of
+                    up to 200 guests. We handle traditional music transitions —
+                    from Rwandan songs to contemporary — with care and cultural
+                    knowledge.
+                  </p>
+                </div>
               </div>
             </div>
+
             <!-- Q3 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                Does UMUTSAKURA provide live music for weddings in Rwanda?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >Does UMUTSAKURA provide live music for weddings in
+                  Rwanda?</span
                 >
-                  Yes. Every UMUTSAKURA package includes a live band. We are
-                  Rwanda's only unified catering and live music company — the
-                  food and the band are designed to work together. We perform
-                  Rwandan contemporary, Afrobeats, gospel, and international
-                  classics. Your setlist is crafted in a 45-minute pre-event
-                  consultation.
-                </p>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    Yes. Every UMUTSAKURA package includes a live band. We are
+                    Rwanda's only unified catering and live music company — the
+                    food and the band are designed to work together. We perform
+                    Rwandan contemporary, Afrobeats, gospel, and international
+                    classics. Your setlist is crafted in a 45-minute pre-event
+                    consultation.
+                  </p>
+                </div>
               </div>
             </div>
+
             <!-- Q4 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                How do I book UMUTSAKURA for my Kigali wedding?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >How do I book UMUTSAKURA for my Kigali wedding?</span
                 >
-                  Contact us via WhatsApp at
-                  <a href="tel:+250788695129" style="color: var(--color-forest)"
-                    >+250 788 695 129</a
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
                   >
-                  or fill in our booking form below. We respond within 2 hours
-                  and send a personalized proposal within 24 hours. A 50%
-                  deposit secures your date. We also host a monthly Tastes &amp;
-                  Tunes showcase — an invitation-only tasting evening — before
-                  you commit.
-                </p>
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    Contact us via WhatsApp at
+                    <a
+                      href="tel:+250788695129"
+                      style="
+                        color: var(--color-forest);
+                        text-decoration: underline;
+                      "
+                      >+250 788 695 129</a
+                    >
+                    or fill in our booking form below. We respond within 2 hours
+                    and send a personalized proposal within 24 hours. A 50%
+                    deposit secures your date. We also host a monthly Tastes
+                    &amp; Tunes showcase — an invitation-only tasting evening —
+                    before you commit.
+                  </p>
+                </div>
               </div>
             </div>
+
             <!-- Q5 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                Do you cater corporate events and NGO functions in Kigali?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >Do you cater corporate events and NGO functions in
+                  Kigali?</span
                 >
-                  Yes. UMUTSAKURA has a dedicated Corporate Edition for NGOs,
-                  banks, embassies, government ministries, and tech companies in
-                  Kigali. We provide formal PDF proposals, VAT receipts, volume
-                  pricing, and can accommodate procurement processes. Target
-                  clients include UNDP, BK, MTN Rwanda, GIZ, and diplomatic
-                  missions.
-                </p>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    Yes. UMUTSAKURA has a dedicated Corporate Edition for NGOs,
+                    banks, embassies, government ministries, and tech companies
+                    in Kigali. We provide formal PDF proposals, VAT receipts,
+                    volume pricing, and can accommodate procurement processes.
+                    Target clients include UNDP, BK, MTN Rwanda, GIZ, and
+                    diplomatic missions.
+                  </p>
+                </div>
               </div>
             </div>
+
             <!-- Q6 -->
             <div
+              class="faq-item"
+              role="listitem"
               itemscope
               itemprop="mainEntity"
               itemtype="https://schema.org/Question"
             >
-              <h3
-                itemprop="name"
-                style="
-                  font-family: var(--font-body);
-                  font-size: var(--text-sm);
-                  font-weight: 500;
-                  letter-spacing: 0.05em;
-                  color: var(--color-forest);
-                  margin-bottom: var(--space-3);
-                "
-              >
-                Can diaspora couples planning a Kigali wedding book UMUTSAKURA
-                remotely?
-              </h3>
-              <div
-                itemscope
-                itemprop="acceptedAnswer"
-                itemtype="https://schema.org/Answer"
-              >
-                <p
-                  itemprop="text"
-                  style="
-                    font-family: var(--font-body);
-                    font-size: var(--text-sm);
-                    color: var(--color-text-muted);
-                    line-height: 1.7;
-                  "
+              <button class="faq-trigger" aria-expanded="false" type="button">
+                <span class="faq-q" itemprop="name"
+                  >Can diaspora couples planning a Kigali wedding book
+                  UMUTSAKURA remotely?</span
                 >
-                  Absolutely. Many of our couples plan from Brussels, Toronto,
-                  Dubai, and London. We communicate entirely via WhatsApp and
-                  email, provide a virtual tasting walkthrough, and assign a
-                  dedicated coordinator. We have hosted multiple diaspora
-                  weddings where guests from Europe and North America described
-                  the experience as world-class. International standards.
-                  Rwandan soul.
-                </p>
+                <span class="faq-icon" aria-hidden="true">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+              <div class="faq-body" role="region" hidden>
+                <div
+                  itemscope
+                  itemprop="acceptedAnswer"
+                  itemtype="https://schema.org/Answer"
+                >
+                  <p itemprop="text">
+                    Absolutely. Many of our couples plan from Brussels, Toronto,
+                    Dubai, and London. We communicate entirely via WhatsApp and
+                    email, provide a virtual tasting walkthrough, and assign a
+                    dedicated coordinator. We have hosted multiple diaspora
+                    weddings where guests from Europe and North America
+                    described the experience as world-class. International
+                    standards. Rwandan soul.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          <p style="text-align: center; margin-top: var(--space-12)">
+          <!-- /.faq-list -->
+
+          <p
+            class="reveal"
+            style="text-align: center; margin-top: var(--space-12)"
+          >
             <a href="#contact" class="btn btn-primary btn-arrow"
               ><span>Book Your Date</span></a
             >
@@ -6584,6 +6746,72 @@
               panel.querySelectorAll(".reveal").forEach((el) => {
                 el.classList.add("visible");
               });
+            }
+          });
+        });
+      })();
+
+      // ─── FAQ ACCORDION ────────────────────────────────────────
+      (function () {
+        const items = document.querySelectorAll(".faq-item");
+        if (!items.length) return;
+
+        items.forEach((item) => {
+          const trigger = item.querySelector(".faq-trigger");
+          const body = item.querySelector(".faq-body");
+          if (!trigger || !body) return;
+
+          // Measure natural height so we can animate to it
+          function getScrollHeight() {
+            body.removeAttribute("hidden");
+            body.style.maxHeight = "none";
+            const h = body.scrollHeight;
+            body.style.maxHeight = "0";
+            return h;
+          }
+
+          trigger.addEventListener("click", () => {
+            const isOpen = trigger.getAttribute("aria-expanded") === "true";
+
+            // Close all other items first (single-open accordion)
+            items.forEach((other) => {
+              if (other === item) return;
+              const otherTrigger = other.querySelector(".faq-trigger");
+              const otherBody = other.querySelector(".faq-body");
+              if (!otherTrigger || !otherBody) return;
+              otherTrigger.setAttribute("aria-expanded", "false");
+              otherBody.style.maxHeight = "0";
+              other.classList.remove("is-open");
+              // Re-hide after transition
+              otherBody.addEventListener("transitionend", function handler() {
+                if (otherTrigger.getAttribute("aria-expanded") === "false") {
+                  otherBody.classList.remove("is-open");
+                }
+                otherBody.removeEventListener("transitionend", handler);
+              });
+            });
+
+            if (isOpen) {
+              // Close this item
+              trigger.setAttribute("aria-expanded", "false");
+              body.style.maxHeight = "0";
+              item.classList.remove("is-open");
+            } else {
+              // Open this item
+              trigger.setAttribute("aria-expanded", "true");
+              item.classList.add("is-open");
+              body.classList.add("is-open");
+              body.removeAttribute("hidden");
+              body.style.maxHeight = getScrollHeight() + "px";
+            }
+          });
+
+          // Keyboard: open with Enter/Space (already native for button)
+          // but ensure body hidden attr doesn't block screen readers when closed
+          body.addEventListener("transitionend", () => {
+            if (trigger.getAttribute("aria-expanded") === "false") {
+              body.setAttribute("hidden", "");
+              body.classList.remove("is-open");
             }
           });
         });
